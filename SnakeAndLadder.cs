@@ -10,8 +10,12 @@ namespace SnakeAndLadder
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Enter Player 1 name: ");
+            string playerOne = Console.ReadLine();
+            Console.WriteLine("Enter Player 2 name: ");
+            string playerTwo = Console.ReadLine();
             Game game = new Game();
-            game.play();
+            game.play(playerOne, playerTwo);
         }
     }
 }
