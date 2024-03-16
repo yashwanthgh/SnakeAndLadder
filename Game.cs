@@ -23,14 +23,58 @@ namespace SnakeAndLadder
 
         // Dice face
         private int dice;
-        
+
+        // To create board on every object creation
+        private Game() { board(); }
+
         // The player rolls the die to get number 1 to 6
         public void play()
         {
             while (true)
             {
+                // If any onr player reacher score 100 then he will win the match
+                if (playerOne == finalScore || playerTwo == finalScore) { return; }
                 Random diceRoll = new Random();
-                dice = diceRoll.Next(1, 7);   
+                dice = diceRoll.Next(1, 7);
+                if (playerNumber == 0)
+                {
+                    playerOne = unitBox(dice, playerOne);
+                    playNoPlay();
+                    Console.WriteLine($" Player One :{playerOne}");
+                    playerNumber++;
+                    Thread.Sleep(3000);
+                }
+                else
+                {
+                    playerTwo = unitBox(dice, playerTwo);
+                    playNoPlay();
+                    Console.WriteLine($" Player Two :{playerTwo}");
+                    playerNumber = 0;
+                    Thread.Sleep(3000);
+                }
+            }
+        }
+
+        private int unitBox(int dice, int oldPosition)
+        {
+            int currentPosition = dice + oldPosition;
+            return newPosition(--currentPosition, currentPosition);
+
+        }
+
+        private int newPosition(int index, int currentPosition)
+        {
+            if (snakeBite[index] < currentPosition)
+            {
+                return snakeBite[index];
+            }
+            else if (ladderClimb[index] > currentPosition)
+            {
+                return ladderClimb[index];
+            }
+            else
+            {
+                return currentPosition + 1;
             }
         }
 
@@ -77,8 +121,6 @@ namespace SnakeAndLadder
             }
         }
 
-
-        private Game() { board(); }
         private void board()
         {
             for (int i = 0; i < 100; i++)
