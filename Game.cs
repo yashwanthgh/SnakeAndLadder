@@ -24,11 +24,15 @@ namespace SnakeAndLadder
         // Dice face
         private int dice;
 
+        // Variables to count the number of dies player rolled
+        private int playerOneDiceRolls;
+        private int playerTwoDiceRolls;
+
         // To create board on every object creation
         public Game() { board(); }
 
         // The player rolls the die to get number 1 to 6
-        public string play()
+        public void play()
         {
             while (true)
             {
@@ -36,38 +40,51 @@ namespace SnakeAndLadder
                 dice = diceRoll.Next(1, 7);
                 if (playerNumber == 0)
                 {
-                    
-                    playerOne = unitBox(dice, finalPerfectScore(playerOne));
-                    if (playerOne == 100) { return "Player one wins"; }
-                    playNoPlay();
-                    Console.WriteLine($" Player One :{playerOne}");
+                    int newPosition = unitBox(dice, finalPerfectScore(playerOne));
+                    if (newPosition == finalScore) // Player One wins
+                    {
+                        Console.WriteLine($"Player one wins with {playerOneDiceRolls} rolls");
+                        return;
+                    }
+                    else if (newPosition < finalScore)
+                    {
+                        playerOne = newPosition;
+                    }
+                    Console.WriteLine($"Player One: {playerOne}");
                     playerNumber++;
-                    Thread.Sleep(1500);
+                    playerOneDiceRolls++;
+                    Thread.Sleep(500);
                 }
                 else
                 {
-                    
-                    playerTwo = unitBox(dice, finalPerfectScore(playerTwo));
-                    if (playerTwo == 100) { return "Player two wins"; }
-                    playNoPlay();
-                    Console.WriteLine($" Player Two :{playerTwo}");
+                    int newPosition = unitBox(dice, finalPerfectScore(playerTwo));
+                    if (newPosition == finalScore) // Player Two wins
+                    {
+                        Console.WriteLine($"Player two wins with {playerTwoDiceRolls} rolls");
+                        return;
+                    }
+                    else if (newPosition < finalScore)
+                    {
+                        playerTwo = newPosition;
+                    }
+                    Console.WriteLine($"Player Two: {playerTwo}");
                     playerNumber = 0;
-                    Thread.Sleep(1500);
+                    playerTwoDiceRolls++;
+                    Thread.Sleep(500);
                 }
             }
         }
 
+
         private int finalPerfectScore(int playerScore)
         {
-            if(playerScore > finalScore)
+            if (playerScore > finalScore)
             {
-                return playerScore - dice;    
-            } else if(playerScore < 0) 
+                return playerScore - dice;
+            }
+            else
             {
-                return 0;
-            } else 
-            {
-               return playerScore;
+                return playerScore;
             }
         }
 
@@ -75,9 +92,23 @@ namespace SnakeAndLadder
         private int unitBox(int dice, int oldPosition)
         {
             int currentPosition = dice + oldPosition;
-            return newPosition(--currentPosition, currentPosition);
-
+            if (currentPosition > finalScore)
+            {
+                // Player stays in the previous position until they get an exact number that adds up to 100
+                return oldPosition;
+            }
+            else if (currentPosition == finalScore)
+            {
+                // Player reaches the final score exactly
+                return finalScore;
+            }
+            else
+            {
+                return newPosition(currentPosition - 1, currentPosition);
+            }
         }
+
+
 
         private int newPosition(int index, int currentPosition)
         {
