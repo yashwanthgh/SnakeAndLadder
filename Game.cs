@@ -25,35 +25,52 @@ namespace SnakeAndLadder
         private int dice;
 
         // To create board on every object creation
-        private Game() { board(); }
+        public Game() { board(); }
 
         // The player rolls the die to get number 1 to 6
-        public void play()
+        public string play()
         {
             while (true)
             {
-                // If any onr player reacher score 100 then he will win the match
-                if (playerOne == finalScore || playerTwo == finalScore) { return; }
                 Random diceRoll = new Random();
                 dice = diceRoll.Next(1, 7);
                 if (playerNumber == 0)
                 {
-                    playerOne = unitBox(dice, playerOne);
+                    
+                    playerOne = unitBox(dice, finalPerfectScore(playerOne));
+                    if (playerOne == 100) { return "Player one wins"; }
                     playNoPlay();
                     Console.WriteLine($" Player One :{playerOne}");
                     playerNumber++;
-                    Thread.Sleep(3000);
+                    Thread.Sleep(1500);
                 }
                 else
                 {
-                    playerTwo = unitBox(dice, playerTwo);
+                    
+                    playerTwo = unitBox(dice, finalPerfectScore(playerTwo));
+                    if (playerTwo == 100) { return "Player two wins"; }
                     playNoPlay();
                     Console.WriteLine($" Player Two :{playerTwo}");
                     playerNumber = 0;
-                    Thread.Sleep(3000);
+                    Thread.Sleep(1500);
                 }
             }
         }
+
+        private int finalPerfectScore(int playerScore)
+        {
+            if(playerScore > finalScore)
+            {
+                return playerScore - dice;    
+            } else if(playerScore < 0) 
+            {
+                return 0;
+            } else 
+            {
+               return playerScore;
+            }
+        }
+
 
         private int unitBox(int dice, int oldPosition)
         {
